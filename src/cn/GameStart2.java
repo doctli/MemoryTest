@@ -8,28 +8,31 @@ import java.awt.event.ActionListener;
 /**
  * Created by doctli on 2015/11/23.
  */
-public class GameStart  implements Runnable{
+public class GameStart2 extends JApplet implements Runnable{
 
-    private int level;
+    private int level=10;
     private  String chars="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private JLabel letter;
-    private int rows;
-    private int i;
     private String resu="";
+    public JPanel p1;
+    private JFrame jf=new JFrame();
+    public GameStart2(){
 
-    public GameStart(){
-
-        JPanel p1=new JPanel();
+    }
+    public void GameStart2(int i){
         p1=new JPanel();
-        p1.setLayout(new BorderLayout());
-        //String chars = "abcdefghijklmnopqrstuvwxyz";
-
-
-        // ImageIcon imageIcon=new ImageIcon(getClass().getResource("image/A.ico"));
-        JLabel letter=new JLabel("aaaaaaa");
+        GridBagLayout layout=new GridBagLayout();
+        p1.setLayout(layout);
+        ImageIcon imageIcon=new ImageIcon("image/C.jpg");
+        letter=new JLabel("2222");
         p1.add(letter);
         new Thread(this).start();
-
+        GridBagConstraints g=new GridBagConstraints();
+        g.fill=GridBagConstraints.BOTH;
+        g.gridwidth=0;
+        g.weightx=0;
+        g.weighty=0;
+        layout.setConstraints(letter,g);
         JPanel p2=new JPanel();
         JLabel resultname=new JLabel("你的答案");
         JTextField resule=new JTextField(20);
@@ -49,23 +52,20 @@ public class GameStart  implements Runnable{
                     int choose=JOptionPane.showConfirmDialog(null,"回答错误\n正确答案："+resu+"\n是否重来");
                     switch (choose){
                         case 0:
+                            jf.dispose();
+                            new GameStart2();
                             break;
                         case 1:
-                            System.out.println("你选择不继续");
+                            System.out.println("你选择不继续"+"");
                             break;
                         case 2:
                             System.out.println("呵呵");
                             break;
                     }
-
                 }
-
-
             }
         });
 
-
-        JFrame jf=new JFrame();
         jf.add(p1,BorderLayout.CENTER);
         jf.add(p2,BorderLayout.SOUTH);
         jf.setTitle("游戏界面");
@@ -76,31 +76,26 @@ public class GameStart  implements Runnable{
         jf.add(p2,BorderLayout.SOUTH);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-    public void run(){
-        try{
-            while(true){
-                if(letter.getText()!="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"){
-                    letter.setText("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");}
-                else
-                    letter.setText("大家好");
-
-//                    for(i=1;i<=8;i++){
-//                        char randomchar=chars.charAt((int)(Math.random() * 26));
-//                        int randomint=(int)(Math.random() * 26);
-//                         // p1.add(new JLabel(String.valueOf(randomchar)));
-//                         // letter.setIcon(new ImageIcon(getClass().getResource("src/image/"+String.valueOf(randomchar)+".ico")));
-//                         letter.setText(String.valueOf(randomchar));
-//                         resu+=String.valueOf(randomchar);
-//                     }
-
-//                else{
-//                    letter.setText("5");
-//                }
-                Thread.sleep(2000);
+public void run(){
+    try{
+        while (level>0){
+            if(letter.getText()==null) {
+                char randomchar = chars.charAt((int) (Math.random() * 26));
+                letter.setText(String.valueOf(randomchar));
+                resu+=String.valueOf(randomchar);
+                System.out.println(resu);
             }
-        }
-        catch (InterruptedException ex){
-
+            else{
+                letter.setText(null);
+            }
+            level--;
+            Thread.sleep(200);
         }
     }
+    catch (InterruptedException e){
+    }
+    finally {
+        letter.setText(null);
+    }
+}
 }

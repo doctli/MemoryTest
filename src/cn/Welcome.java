@@ -4,10 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 
 /**
- * Created by doctli on 2015/11/23.
  */
 class WelcomeJPanel extends JFrame{
     public String username=null;
@@ -20,7 +18,7 @@ class WelcomeJPanel extends JFrame{
         stb=new JButton("开始");
         list=new JButton("英雄榜");
 
-        String level[]={"—建议初级—","——初级——","——中级——","——高级——"};
+        String level[]={"——初级——","——中级——","——高级——"};
         levelselect=new JComboBox(level);
         levelselect.setBorder(BorderFactory.createTitledBorder("选择难度"));
         levelname=levelselect.getSelectedItem().toString();
@@ -35,7 +33,6 @@ class WelcomeJPanel extends JFrame{
         q.add(stb);
         q.add(levelselect);
         q.add(list);
-        q.add(list);
 
         setLayout(new BorderLayout());
         add(q,BorderLayout.SOUTH);
@@ -47,17 +44,19 @@ class WelcomeJPanel extends JFrame{
         stb.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // username=JOptionPane.showInputDialog(null,"英雄尊姓大名");
                 switch (levelname){
-                    case "—建议初级—":
                     case "——初级——":
-                        new GameStart();
+                        GameStart2 g=new GameStart2();
+                        g.GameStart2(20);
+                        System.out.print("游戏开始");
                         break;
                     case "——中级——":
-                        new GameStart();
+
+                        System.out.print("游戏开始");
                         break;
                     case "——高级——":
-                        new GameStart();
+
+                        System.out.print("游戏开始");
                         break;
                     default:
                         break;
