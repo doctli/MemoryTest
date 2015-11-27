@@ -44,19 +44,19 @@ class WelcomeJPanel extends JFrame{
         stb.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // username=JOptionPane.showInputDialog(null,"英雄尊姓大名");
+
                 switch (levelname){
                     case "——初级——":
                         GameStart2 g=new GameStart2();
-                        g.GameStart2(20);
-                        System.out.print("游戏开始");
+                        g.randomchar();
+                        System.out.println("游戏开始");
                         break;
                     case "——中级——":
-
-                        System.out.print("游戏开始");
+                        new GameStart2();
                         break;
                     case "——高级——":
-
-                        System.out.print("游戏开始");
+                        new GameStart2();
                         break;
                     default:
                         break;

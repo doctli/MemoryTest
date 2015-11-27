@@ -17,9 +17,10 @@ public class GameStart2 extends JApplet implements Runnable{
     public JPanel p1;
     private JFrame jf=new JFrame();
     public GameStart2(){
+        //randomchar();
 
     }
-    public void GameStart2(int i){
+    public  void randomchar(){
         p1=new JPanel();
         GridBagLayout layout=new GridBagLayout();
         p1.setLayout(layout);
@@ -27,6 +28,7 @@ public class GameStart2 extends JApplet implements Runnable{
         letter=new JLabel("2222");
         p1.add(letter);
         new Thread(this).start();
+
         GridBagConstraints g=new GridBagConstraints();
         g.fill=GridBagConstraints.BOTH;
         g.gridwidth=0;
@@ -45,7 +47,7 @@ public class GameStart2 extends JApplet implements Runnable{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(resule.getText().equals(resu)){
-                    String  username=JOptionPane.showInputDialog(null,"t挑战成功\n英雄尊姓大名");
+                    String  username=JOptionPane.showInputDialog(null,"挑战成功\n英雄尊姓大名");
 
                 }
                 else{
@@ -77,8 +79,9 @@ public class GameStart2 extends JApplet implements Runnable{
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 public void run(){
+    int a=10;
     try{
-        while (level>0){
+        while (a>0){
             if(letter.getText()==null) {
                 char randomchar = chars.charAt((int) (Math.random() * 26));
                 letter.setText(String.valueOf(randomchar));
@@ -88,14 +91,14 @@ public void run(){
             else{
                 letter.setText(null);
             }
-            level--;
+            a--;
             Thread.sleep(200);
         }
     }
     catch (InterruptedException e){
     }
     finally {
-        letter.setText(null);
+        letter.setText("没有了");
     }
 }
 }
