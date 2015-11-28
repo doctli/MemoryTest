@@ -7,12 +7,13 @@ import java.awt.event.ActionListener;
 
 /**
  */
-class WelcomeJPanel extends JFrame{
+class WelcomeJPanel {
     public String username=null;
     private JButton stb,list;
     private JComboBox levelselect;
     String levelname=null;
     public WelcomeJPanel(){
+        JFrame jf=new JFrame();
         JPanel q=new JPanel();
 
         stb=new JButton("开始");
@@ -34,29 +35,29 @@ class WelcomeJPanel extends JFrame{
         q.add(levelselect);
         q.add(list);
 
-        setLayout(new BorderLayout());
-        add(q,BorderLayout.SOUTH);
+        jf.setLayout(new BorderLayout());
+        jf.add(q,BorderLayout.SOUTH);
         JTextArea jta=new JTextArea("welcome\n"
                 +"记忆测试系统\n"
                 +"选择级别+开始\n");
-        add(jta,BorderLayout.CENTER);
+        jf.add(jta,BorderLayout.CENTER);
 
         stb.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // username=JOptionPane.showInputDialog(null,"英雄尊姓大名");
-
+                //GameStart2 g=new GameStart2();
                 switch (levelname){
                     case "——初级——":
-                        GameStart2 g=new GameStart2();
-                        g.randomchar();
+                        jf.dispose();
+                        new GameStart2();
                         System.out.println("游戏开始");
                         break;
                     case "——中级——":
-                        new GameStart2();
+
                         break;
                     case "——高级——":
-                        new GameStart2();
+
                         break;
                     default:
                         break;
@@ -69,17 +70,17 @@ class WelcomeJPanel extends JFrame{
                 System.out.println("list button");
             }
         });
-    }
-    public String getUsername(){
-        return username;
-    }
-    public static void main(String[] args){
-        WelcomeJPanel jf=new WelcomeJPanel();
+
         jf.setTitle("欢迎使用记忆测试系统");
         jf.setSize(500,500);
         jf.setVisible(true);
         jf.setLocation(0,0);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    public static void main(String[] args){
+        new WelcomeJPanel();
+
 
     }
 }
