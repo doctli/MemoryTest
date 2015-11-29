@@ -17,9 +17,7 @@ public class GameStart2 extends JFrame {
     public JPanel p1;
     private Thread thread;
     private Runnable runnable;
-    private ImageIcon imageIcon=new ImageIcon("image/C.jpg");
-    private ImageIcon imageIcon2=new ImageIcon("image/A.jpg");
-    //private JFrame jf;
+    private ImageIcon icon=new ImageIcon("image/C.jpg");
     public ImageIcon setimage(String path){
         ImageIcon icon=new ImageIcon("image/"+path+".jpg");
         return icon;
@@ -30,7 +28,7 @@ public class GameStart2 extends JFrame {
         GridBagLayout layout = new GridBagLayout();
         p1.setLayout(layout);
         letter = new JLabel();
-        letter.setIcon(imageIcon);
+        letter.setIcon(icon);
         p1.add(letter);
 
         GridBagConstraints g = new GridBagConstraints();
@@ -89,7 +87,6 @@ public class GameStart2 extends JFrame {
                 try {
                     while (a > 0) {
                         if (letter.getText() == null) {
-
                             char randomchar = chars.charAt((int) (Math.random() * 26));
                             ImageIcon imageIcon1 = setimage(String.valueOf(randomchar));
                             letter.setIcon(imageIcon1);

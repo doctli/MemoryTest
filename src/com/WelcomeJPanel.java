@@ -4,30 +4,34 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  */
-class WelcomeJPanel extends JFrame {
+class WelcomeJPanel{
+    private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
     private CardLayout cardLayout=new CardLayout();
     private JPanel cardPanel=new JPanel(cardLayout);
     private JPanel q=new JPanel();
     private String username=null;
     private JButton stb,list;
+    private JButton clear,back;
     private JComboBox levelselect;
     private String levelname=null;
     private   String chars="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private int level=10;
 
     private Thread thread,thread2,thread3;
     private Runnable runnable,runnable2,runnable3;
 
     private JLabel letter;
     private String resu="";
-    private JPanel p1,p3,firstjpanel;
+    private JPanel panel1,panel2,panel3;
 
-    private JTextArea paiming=new JTextArea();
+    private static JTextArea paiming=new JTextArea(30,30);
+    private JTextField resule;
+    private JFrame jf;
 
-    private int start;
 
     public ImageIcon setimage(String path){
         ImageIcon icon=new ImageIcon("image/"+path+".jpg");
@@ -47,6 +51,8 @@ class WelcomeJPanel extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 levelname = levelselect.getSelectedItem().toString();
+                resu="";
+                resule.setText(null);
                 System.out.println("难度已经改变      " + levelname);
             }
         });
@@ -55,16 +61,15 @@ class WelcomeJPanel extends JFrame {
         q.add(levelselect);
         q.add(list);
 
-        firstjpanel = new JPanel();
-        firstjpanel.setLayout(new BorderLayout());
-        firstjpanel.add(q, BorderLayout.SOUTH);
+        panel1 = new JPanel();
+        panel1.setLayout(new BorderLayout());
+        panel1.add(q, BorderLayout.SOUTH);
         JTextArea jta = new JTextArea("welcome\n" + "记忆测试系统\n" + "选择级别+开始\n");
-        firstjpanel.add(jta, BorderLayout.CENTER);
+        panel1.add(jta, BorderLayout.CENTER);
 
         stb.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // username=JOptionPane.showInputDialog(null,"英雄尊姓大名");
                 cardLayout.show(cardPanel, "2");
                 switch (levelname) {
                     case "——初级——":
@@ -87,19 +92,19 @@ class WelcomeJPanel extends JFrame {
         list.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cardLayout.last(cardPanel);
-                System.out.println("list button");
+                paiming.setText(filedeal.showFile());
+                if(paiming.getText().equals(""))
+                    JOptionPane.showMessageDialog(null,"历史等你创造");
+                else{
+                    cardLayout.last(cardPanel);
+                }
+
             }
         });
 
         //------------------------------------------------------JPanel2-------------------------------------------------------------------------------------------------
-//        p1=new JPanel();
-//        //GridBagLayout layout=new GridBagLayout();
-//        p1.setLayout(new BorderLayout());
-//        ImageIcon imageIcon=new ImageIcon("image/C.jpg");
-        letter = new JLabel("aaaaaaaaa");
-//        p1.add(letter);
-        //new Thread(this).start();
+        letter = new JLabel("                    ");
+        letter.setFont(new Font("宋体",Font.BOLD, 35));
 
 //        GridBagConstraints g=new GridBagConstraints();
 //        g.fill=GridBagConstraints.BOTH;
@@ -109,30 +114,34 @@ class WelcomeJPanel extends JFrame {
 //        layout.setConstraints(letter,g);
         JPanel p2 = new JPanel();
         JLabel resultname = new JLabel("你的答案");
-        JTextField resule = new JTextField(20);
+        resule = new JTextField(20);
         JButton submit = new JButton("提交");
         p2.add(resultname);
         p2.add(resule);
         p2.add(submit);
-        p3 = new JPanel();
-        p3.add(new JLabel("hehehehheeh"), BorderLayout.NORTH);
-        p3.add(letter, BorderLayout.CENTER);
-        p3.add(p2, BorderLayout.SOUTH);
+        panel2 = new JPanel();
+        panel2.add(letter, BorderLayout.CENTER);
+        panel2.add(p2, BorderLayout.SOUTH);
 
         submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (resule.getText().equals(resu)) {
-                    String username = JOptionPane.showInputDialog(null, "挑战成功\n英雄尊姓大名");
-
+                if (resule.getText().equalsIgnoreCase(resu)) {
+                    username = JOptionPane.showInputDialog(null, "挑战成功\n英雄尊姓大名");
+                    if(username!=null) {
+                        filedeal.appendFile(username + " " + levelname+"挑战成功  "+df.format(new Date())+"\n");
+                        paiming.setText(filedeal.showFile());
+                        cardLayout.last(cardPanel);
+                    }
                 } else {
                     int choose = JOptionPane.showConfirmDialog(null, "回答错误\n正确答案：" + resu + "\n是否重来");
                     switch (choose) {
                         case 0:
-                            //jf.dispose();
-                            //new GameStart2();
+                            jf.dispose();
+                            new WelcomeJPanel();
                             break;
                         case 1:
+                            jf.dispose();
                             System.out.println("你选择不继续" + "");
                             break;
                         case 2:
@@ -142,26 +151,57 @@ class WelcomeJPanel extends JFrame {
                 }
             }
         });
+        back=new JButton("返回");
+        back.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jf.dispose();
+                new WelcomeJPanel();
+                cardLayout.first(cardPanel);
+            }
+        });
+        clear=new JButton("清空");
+        clear.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                filedeal.clearFile();
+                cardLayout.last(cardPanel);
+            }
+        });
+        JPanel panel31=new JPanel();
+        panel31.add(clear);
+        panel31.add(back);
+        panel3=new JPanel();
+        panel3.add(panel31,BorderLayout.NORTH);
+        panel3.add(paiming,BorderLayout.CENTER);
 
-        cardPanel.add(firstjpanel, String.valueOf(1));
-        cardPanel.add(p3, String.valueOf(2));
-        cardPanel.add(paiming, String.valueOf(3));
+        cardPanel.add(panel1, String.valueOf(1));
+        cardPanel.add(panel2, String.valueOf(2));
+        cardPanel.add(panel3, String.valueOf(3));
 
-        add(cardPanel, BorderLayout.CENTER);
+        jf=new JFrame();
+        jf.setTitle("欢迎使用记忆测试系统");
+        jf.setSize(500,400);
+        jf.setVisible(true);
+        jf.setLocationRelativeTo(null);
+        //jf.setLocation(0,0);
+        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jf.add(cardPanel, BorderLayout.CENTER);
+
         runnable=new Runnable() {//-------------------------------------------------------------------初级难度
             @Override
             public void run() {
                 int a=10;
                 try{
                     while (a>0){
-                        if(letter.getText()==null) {
+                        if(letter.getText().equals("                    ")) {
                             char randomchar = chars.charAt((int) (Math.random() * 26));
-                            letter.setText(String.valueOf(randomchar));
+                            letter.setText(String.valueOf(randomchar)+"                  ");
                             resu+=String.valueOf(randomchar);
                             System.out.println(resu);
                         }
                         else{
-                            letter.setText(null);
+                            letter.setText("                    ");
                         }
                         a--;
                         Thread.sleep(200);
@@ -171,7 +211,7 @@ class WelcomeJPanel extends JFrame {
 
                 }
                 finally {
-                    letter.setText("没有了");
+                    letter.setText("^-^");
                 }
             }
         };
@@ -182,7 +222,6 @@ class WelcomeJPanel extends JFrame {
                 try {
                     while (a > 0) {
                         if (letter.getText() == null) {
-
                             char randomchar = chars.charAt((int) (Math.random() * 26));
                             ImageIcon imageIcon1 = setimage(String.valueOf(randomchar));
                             letter.setIcon(imageIcon1);
@@ -190,7 +229,7 @@ class WelcomeJPanel extends JFrame {
                             resu += String.valueOf(randomchar);
                             System.out.println(resu);
                         } else {
-                            letter.setIcon(null);
+                            //letter.setIcon(null);
                             letter.setText(null);
                         }
                         a--;
@@ -199,6 +238,7 @@ class WelcomeJPanel extends JFrame {
                 } catch (InterruptedException e) {
 
                 } finally {
+                    letter.setIcon(null);
                     letter.setText("没有了");
                 }
 
@@ -217,12 +257,6 @@ class WelcomeJPanel extends JFrame {
 
 
     public static void main(String[] args){
-        WelcomeJPanel jf=new WelcomeJPanel();
-        jf.setTitle("欢迎使用记忆测试系统");
-        jf.setSize(500,600);
-        jf.setVisible(true);
-        jf.setLocation(0,0);
-        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        new WelcomeJPanel();
     }
 }
