@@ -15,24 +15,27 @@ class WelcomeJPanel{
     private JPanel cardPanel=new JPanel(cardLayout);
     private JScrollPane scrollPane=new JScrollPane();
     private JPanel q=new JPanel();
-    private String username=null;
+    private String username="";
     private JButton stb,list;
-    private JButton clear,back;
+    private JButton clear,back,tryagain;
     private JComboBox levelselect,levelnumselect;
     private String levelname=null;
     private String levelnum=null;
     private   String chars="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
     private Thread thread,thread2,thread3;
     private Runnable runnable,runnable2,runnable3;
-
     private JLabel letter;
-    private String resu="";
-    private JPanel panel1,panel2,panel3,panel31;
-
+    private String resuu="";
+    private JPanel panel1,panel2,panel21,panel3,panel31;
     private static JTextArea paiming=new JTextArea(30,30);
-    private JTextField resule;
+    private JTextField result;
     private JFrame jf;
+    private int type;
+    private Icon img1=new ImageIcon("image/zb.jpg");
+    private Icon img2=new ImageIcon("image/zbw.jpg");
+    private Icon waitimage=new ImageIcon("image/hg.jpg");
+    private static int gamerun=0;
+
     private int a;
 
     private StopTime stopTime=new StopTime();
@@ -41,6 +44,7 @@ class WelcomeJPanel{
         ImageIcon icon=new ImageIcon("image/"+path+".jpg");
         return icon;
     }
+
     public WelcomeJPanel() {
 
         //------------------------------------------------------JPanel1-------------------------------------------------------------------------------------------------
@@ -72,58 +76,81 @@ class WelcomeJPanel{
                         a=2;
                         break;
                     case "第 2 关":
-                        a=2;
+                        a=4;
                         break;
                     case "第 3 关":
-                        a=2;
+                        a=6;
                         break;
                     case "第 4 关":
-                        a=2;
+                        a=8;
                         break;
                     case "第 5 关":
-                        a=2;
+                        a=10;
                         break;
                     default:
                         System.err.println("关卡选择错误");
                         break;
                 }
-                resu="";
-                resule.setText(null);
+                resuu="";
+                result.setText(null);
                 System.out.println("难度已经改变      " + levelname+levelnum);
             }
         });
-        q.add(stb);
+        q.add(list);
         q.add(levelselect);
         q.add(levelnumselect);
-        q.add(list);
-
+        q.add(stb);
         panel1 = new JPanel();
         panel1.setLayout(new BorderLayout());
         panel1.add(q, BorderLayout.SOUTH);
-        JTextArea jta = new JTextArea("welcome\n" + "记忆测试系统\n" + "选择级别+开始\n");
+        JTextArea jta = new JTextArea(
+                "欢迎来到记忆测试系统\n" +
+                "记忆测试系统\n" +"使用方法：选择难度等级——选择关卡——>开始\n" +
+                        "答案不区分大小写\n"+
+        "\n\n\n"
+        +"已有："+gamerun+"次挑战,其中挑战成功的请看英雄榜");
         panel1.add(jta, BorderLayout.CENTER);
 
         stb.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                username = JOptionPane.showInputDialog(null, "勇士：\n尊姓大名");
-                if(!username.equals(null)){
+                gamerun++;
+                jta.setText(
+                        "欢迎来到记忆测试系统\n" +
+                                "记忆测试系统\n" +"使用方法：选择难度等级——选择关卡——>开始\n" +
+                                "答案不区分大小写\n"+
+                                "\n\n\n"
+                                +"已有："+gamerun+"  次挑战,其中挑战成功的请看英雄榜");
                     cardLayout.show(cardPanel, "2");
                     switch (levelname) {
                         case "——初级——":
-                            thread.start();
+                            type=1;
+                            result.setText("");
+                            new Thread(runnable).start();
                             break;
                         case "——中级——":
-                            thread2.start();
+                            type=2;
+                            result.setText("");
+                            new Thread(runnable2).start();
                             break;
                         case "——高级——":
-                            thread3.start();
+                            int choose= JOptionPane.showConfirmDialog(null,"装逼模式即将开启\n"+"是否继续","最高难度",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,img1);
+                            switch (choose){
+                                case 0:
+                                    type=3;
+                                    result.setText("");
+                                    new Thread(runnable3).start();
+                                    break;
+                                case 1:
+                                    //JOptionPane.showMessageDialog(null,"","",img1);
+                                    break;
+                                case 2:
+                                    break;
+                            }
                             break;
                         default:
                             break;
                     }
-                }
-
             }
         });
         list.addActionListener(new ActionListener() {
@@ -142,36 +169,89 @@ class WelcomeJPanel{
         //------------------------------------------------------JPanel2-------------------------------------------------------------------------------------------------
         letter = new JLabel("                    ");
         letter.setFont(new Font("宋体",Font.BOLD, 35));
+        back=new JButton("返回");
+        back.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.first(cardPanel);
+            }
+        });
 
-        JPanel p2 = new JPanel();
+        tryagain=new JButton("重来");
+        panel21 = new JPanel();
         JLabel resultname = new JLabel("你的答案");
-        resule = new JTextField(20);
+        result = new JTextField(20);
         JButton submit = new JButton("提交");
-        p2.add(resultname);
-        p2.add(resule);
-        p2.add(submit);
+        panel21.add(resultname);
+        panel21.add(result);
+        panel21.add(submit);
+        panel21.add(tryagain);
+        panel21.add(back);
         panel2 = new JPanel();
         panel2.add(letter, BorderLayout.CENTER);
-        panel2.add(p2, BorderLayout.SOUTH);
 
+        tryagain.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                switch (type){
+                    case 1:
+                        new Thread(runnable).start();
+                        break;
+                    case 2:
+                        new Thread(runnable2).start();
+                        break;
+                    case 3:
+                        new Thread(runnable3).start();
+                        break;
+                    default:
+                        new Thread(runnable).start();
+                        break;
+                }
+            }
+        });
         submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 stopTime.counttime(new Date());
-                if (resule.getText().equalsIgnoreCase(resu)) {
-                    filedeal.appendFile(username + " " + levelname+"挑战成功  "+stopTime.getTimes()+"\n");
-                    paiming.setText(filedeal.showFile());
+                if (result.getText().equalsIgnoreCase(resuu)) {
+                    int choose= JOptionPane.showConfirmDialog(null,"答案正确\n"+"英雄，是否留下姓名","挑战成功",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,img1);
+                    switch (choose){
+                        case 0:
+                            username = JOptionPane.showInputDialog(null, "");
+                            if(!username.equals("")&&!username.equals(null)){
+                                filedeal.appendFile(username + " " + levelname+levelnum+"挑战成功  "+stopTime.getTimes()+"\n");
+                                paiming.setText(filedeal.showFile());
+                            }
+                            break;
+                        case 1:
+                            JOptionPane.showMessageDialog(null,"装了逼就跑,6666");
+                            paiming.setText(filedeal.showFile());
+                            break;
+                        case 2:
+                            break;
+                    }
                     cardLayout.last(cardPanel);
                 } else {
-                    int choose = JOptionPane.showConfirmDialog(null, "回答错误\n正确答案：" + resu + "\n是否重来");
+                    int choose = JOptionPane.showConfirmDialog(null, "回答错误\n正确答案：" + resuu + "\n是否重来","",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,img1);
                     switch (choose) {
                         case 0:
-                            jf.dispose();
-                            new WelcomeJPanel();
+                            switch (type){
+                                case 1:
+                                    new Thread(runnable).start();
+                                    break;
+                                case 2:
+                                    new Thread(runnable2).start();
+                                    break;
+                                case 3:
+                                    new Thread(runnable3).start();
+                                    break;
+                                default:
+                                    new Thread(runnable).start();
+                                    break;
+                            }
                             break;
                         case 1:
                             jf.dispose();
-                            new WelcomeJPanel();
                             break;
                         case 2:
                             break;
@@ -179,21 +259,13 @@ class WelcomeJPanel{
                 }
             }
         });
-        back=new JButton("返回");
-        back.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                jf.dispose();
-                new WelcomeJPanel();
-                cardLayout.first(cardPanel);
-            }
-        });
         clear=new JButton("清空");
         clear.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                gamerun=0;
                 filedeal.clearFile();
-                cardLayout.last(cardPanel);
+                paiming.setText(filedeal.showFile());
             }
         });
         panel31=new JPanel();
@@ -210,7 +282,7 @@ class WelcomeJPanel{
 
         jf=new JFrame();
         jf.setTitle("欢迎使用记忆测试系统");
-        jf.setSize(500,400);
+        jf.setSize(600,400);
         jf.setVisible(true);
         jf.setLocationRelativeTo(null);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -219,15 +291,16 @@ class WelcomeJPanel{
         runnable=new Runnable() {//-------------------------------------------------------------------初级难度
             @Override
             public void run() {
+                String resu="";
                 stopTime.setStart(new Date());
                 int b=a+10;
+                letter.setIcon(null);
                 try{
                     while (b>0){
                         if(letter.getText().equals("                    ")) {
                             char randomchar = chars.charAt((int) (Math.random() * 26));
                             letter.setText(String.valueOf(randomchar)+"                  ");
                             resu+=String.valueOf(randomchar);
-                            System.out.println(resu);
                         }
                         else{
                             letter.setText("                    ");
@@ -237,39 +310,46 @@ class WelcomeJPanel{
                     }
                 }
                 catch (InterruptedException e){
-
                 }
                 finally {
-                    letter.setText("^-^");
+                    panel2.add(panel21, BorderLayout.SOUTH);
+                    letter.setText("不急，慢慢想你就忘记了");
+                    letter.setIcon(waitimage);
+                    resuu=resu;
+                    System.out.println(resuu);
                 }
             }
         };
         runnable2=new Runnable() {//-------------------------------------------------------------------中级级难度
             @Override
             public void run() {
+                letter.setIcon(null);
+                String resu="";
                 stopTime.setStart(new Date());
-                int a = 10;
+                int b = a+10;
                 try {
-                    while (a > 0) {
+                    while (b > 0) {
                         if (letter.getText() == null) {
                             char randomchar = chars.charAt((int) (Math.random() * 26));
                             ImageIcon imageIcon1 = setimage(String.valueOf(randomchar));
                             letter.setIcon(imageIcon1);
                            // letter.setText(String.valueOf(randomchar));
                             resu += String.valueOf(randomchar);
-                            System.out.println(resu);
                         } else {
                             //letter.setIcon(null);
                             letter.setText(null);
                         }
-                        a--;
+                        b--;
                         Thread.sleep(200);
                     }
                 } catch (InterruptedException e) {
 
                 } finally {
-                    letter.setIcon(new ImageIcon("image/zero.jpg"));
-                    letter.setText("没有了");
+                    panel2.add(panel21, BorderLayout.SOUTH);
+                    letter.setText("不急，慢慢想你就忘记了");
+                    letter.setIcon(waitimage);
+                    resuu=resu;
+                    System.out.println(resuu);
                 }
 
             }
@@ -277,6 +357,8 @@ class WelcomeJPanel{
         runnable3=new Runnable() {//-------------------------------------------------------------------高级级难度
             @Override
             public void run() {
+                letter.setIcon(null);
+                String resu="";
                 stopTime.setStart(new Date());
                 int b= a+20;
                 try {
@@ -285,7 +367,6 @@ class WelcomeJPanel{
                             char randomchar = chars.charAt((int) (Math.random() * 26));
                             letter.setText(String.valueOf(randomchar)+"                  ");
                             resu+=String.valueOf(randomchar);
-                            System.out.println(resu);
                         }
                         else{
                             letter.setText("                    ");
@@ -296,8 +377,11 @@ class WelcomeJPanel{
                 } catch (InterruptedException e) {
 
                 } finally {
-                    letter.setIcon(null);
-                    letter.setText("没有了");
+                    panel2.add(panel21, BorderLayout.SOUTH);
+                    letter.setText("不急，慢慢想你就忘记了");
+                    letter.setIcon(waitimage);
+                    resuu=resu;
+                    System.out.println(resuu);
                 }
 
             }
