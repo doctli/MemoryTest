@@ -4,13 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  */
 class WelcomeJPanel{
-    private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
     private CardLayout cardLayout=new CardLayout();
     private JPanel cardPanel=new JPanel(cardLayout);
     private JScrollPane scrollPane=new JScrollPane();
@@ -32,14 +30,13 @@ class WelcomeJPanel{
     private JFrame jf;
     private int type;
     private Icon img1=new ImageIcon("image/zb.jpg");
-    private Icon img2=new ImageIcon("image/zbw.jpg");
+    private Icon success=new ImageIcon("image/success.jpg");
     private Icon waitimage=new ImageIcon("image/hg.jpg");
+    private Icon errorimage=new ImageIcon("image/error.jpg");
+    private Icon success2=new ImageIcon("image/success2.jpg");
     private static int gamerun=0;
-
     private int a;
-
     private StopTime stopTime=new StopTime();
-
     public ImageIcon setimage(String path){
         ImageIcon icon=new ImageIcon("image/"+path+".jpg");
         return icon;
@@ -110,6 +107,8 @@ class WelcomeJPanel{
         "\n\n\n"
         +"已有："+gamerun+"次挑战,其中挑战成功的请看英雄榜");
         panel1.add(jta, BorderLayout.CENTER);
+        jta.setEditable(false);
+        paiming.setEditable(false);
 
         stb.addActionListener(new ActionListener() {
             @Override
@@ -214,7 +213,7 @@ class WelcomeJPanel{
             public void actionPerformed(ActionEvent e) {
                 stopTime.counttime(new Date());
                 if (result.getText().equalsIgnoreCase(resuu)) {
-                    int choose= JOptionPane.showConfirmDialog(null,"答案正确\n"+"英雄，是否留下姓名","挑战成功",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,img1);
+                    int choose= JOptionPane.showConfirmDialog(null,"答案正确\n"+"英雄，是否留下姓名","挑战成功",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,success);
                     switch (choose){
                         case 0:
                             username = JOptionPane.showInputDialog(null, "");
@@ -230,11 +229,14 @@ class WelcomeJPanel{
                         case 2:
                             break;
                     }
-                    cardLayout.last(cardPanel);
-                } else {
-                    int choose = JOptionPane.showConfirmDialog(null, "回答错误\n正确答案：" + resuu + "\n是否重来","",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,img1);
-                    switch (choose) {
+                    int isAgain=JOptionPane.showConfirmDialog(null,"已经载入英雄榜\n"+"是否进入下一关","下一关",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,success2);
+                    switch (isAgain){
                         case 0:
+                            cardLayout.show(cardPanel, "2");
+                            if(a<10)
+                                a+=2;
+                            JOptionPane.showMessageDialog(null,"即将开始"+levelname+":第"+a+"关");
+                            result.setText(null);
                             switch (type){
                                 case 1:
                                     new Thread(runnable).start();
@@ -251,9 +253,34 @@ class WelcomeJPanel{
                             }
                             break;
                         case 1:
-                            jf.dispose();
-                            break;
                         case 2:
+                            cardLayout.first(cardPanel);
+                            break;
+
+                    }
+                } else {
+                    int choose = JOptionPane.showConfirmDialog(null, "回答错误\n正确答案：" + resuu + "\n是否重来","",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,errorimage);
+                    switch (choose) {
+                        case 0:
+                            JOptionPane.showMessageDialog(null,"重来会比较快，请注意左上角");
+                            switch (type){
+                                case 1:
+                                    new Thread(runnable).start();
+                                    break;
+                                case 2:
+                                    new Thread(runnable2).start();
+                                    break;
+                                case 3:
+                                    new Thread(runnable3).start();
+                                    break;
+                                default:
+                                    new Thread(runnable).start();
+                                    break;
+                            }
+                            break;
+                        case 1:
+                        case 2:
+                            cardLayout.first(cardPanel);
                             break;
                     }
                 }
@@ -346,7 +373,7 @@ class WelcomeJPanel{
 
                 } finally {
                     panel2.add(panel21, BorderLayout.SOUTH);
-                    letter.setText("不急，慢慢想你就忘记了");
+                    letter.setText("咱不急，慢慢想");
                     letter.setIcon(waitimage);
                     resuu=resu;
                     System.out.println(resuu);
